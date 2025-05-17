@@ -1,0 +1,5 @@
+{
+	"text.autoconfig.durability_enhanced.title": "耐久增强",
+	"text.autoconfig.durability_enhanced.option.noRepairAccumulatePenalties": "无修复累积惩罚",
+	"text.autoconfig.durability_enhanced.option.noRepairAccumulatePenalties.@Tooltip": "修复物品时不累积惩罚"
+}

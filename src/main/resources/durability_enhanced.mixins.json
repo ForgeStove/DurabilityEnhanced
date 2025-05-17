@@ -1,0 +1,8 @@
+{
+	"required": false,
+	"minVersion": "0",
+	"package": "com.forgestove.durability_enhanced.mixin",
+	"mixins": [
+		"AnvilMenuMixin"
+	]
+}
