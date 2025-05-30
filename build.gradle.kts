@@ -2,13 +2,13 @@
 
 plugins {
 	idea
-	id("net.neoforged.moddev") version "+"
+	id("net.neoforged.moddev.legacyforge") version "+"
 	id("me.modmuss50.mod-publish-plugin") version "+"
 }
 base.archivesName.set(e("mod_id"))
 group = e("mod_group_id")
 version = "${e("minecraft_version")}-${e("mod_version")}+${e("upper_loader")}"
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 idea.module {
 	isDownloadSources = true
 	isDownloadJavadoc = true
@@ -24,8 +24,12 @@ tasks.processResources {
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 tasks.jar { from("LICENSE") }
-neoForge {
-	version = e("loader_version")
+mixin {
+	add(sourceSets.main.get(), "${e("mod_id")}.refmap.json")
+	config("${e("mod_id")}.mixins.json")
+}
+legacyForge {
+	version = "${e("minecraft_version")}-${e("loader_version")}"
 	parchment {
 		mappingsVersion.set(e("parchment_version"))
 		minecraftVersion.set(e("minecraft_version"))
@@ -47,6 +51,9 @@ repositories {
 	maven("https://maven.blamejared.com") // JEI
 }
 dependencies {
+	annotationProcessor("org.spongepowered:mixin:${e("mixin_version")}:processor")
+	compileOnly("io.github.llamalad7:mixinextras-common:${e("mixin_extras_version")}")
+	implementation("io.github.llamalad7:mixinextras-${e("loader")}:${e("mixin_extras_version")}")
 	implementation("me.shedaniel.cloth:cloth-config-${e("loader")}:${e("cloth_config_version")}")
 }
 publishMods {
@@ -55,7 +62,7 @@ publishMods {
 	type.set(ALPHA)
 	version.set(project.version.toString())
 	displayName.set("[${e("upper_loader")}] ${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
-	modLoaders.addAll(e("upper_loader"))
+	modLoaders.addAll(e("upper_loader"), e("other_loader"))
 	modrinth {
 		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 		projectId.set("qSWV0tOk")
