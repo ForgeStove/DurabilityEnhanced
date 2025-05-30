@@ -5,14 +5,13 @@ plugins {
 	id("net.neoforged.moddev") version "+"
 	id("me.modmuss50.mod-publish-plugin") version "+"
 }
-repositories {
-	mavenLocal()
-	mavenCentral()
-	maven("https://maven.shedaniel.me") // Cloth Config API
-	maven("https://maven.blamejared.com") // JEI
-}
-dependencies {
-	implementation("me.shedaniel.cloth:cloth-config-${e("loader")}:${e("cloth_config_version")}")
+base.archivesName.set(e("mod_id"))
+group = e("mod_group_id")
+version = "${e("minecraft_version")}-${e("mod_version")}+${e("upper_loader")}"
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+idea.module {
+	isDownloadSources = true
+	isDownloadJavadoc = true
 }
 tasks.processResources {
 	val replace = properties.mapValues { it.value.toString() }
@@ -24,17 +23,7 @@ tasks.processResources {
 	into("build/resources/main")
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
-base.archivesName.set(e("mod_id"))
-group = e("mod_group_id")
-version = "${e("minecraft_version")}-${e("mod_version")}+${e("upper_loader")}"
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 tasks.jar { from("LICENSE") }
-idea {
-	module {
-		isDownloadSources = true
-		isDownloadJavadoc = true
-	}
-}
 neoForge {
 	version = e("loader_version")
 	parchment {
@@ -50,6 +39,15 @@ neoForge {
 		}
 	}
 	mods { create(e("mod_id")) { sourceSet(sourceSets["main"]) } }
+}
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven("https://maven.shedaniel.me") // Cloth Config API
+	maven("https://maven.blamejared.com") // JEI
+}
+dependencies {
+	implementation("me.shedaniel.cloth:cloth-config-${e("loader")}:${e("cloth_config_version")}")
 }
 publishMods {
 	file.set(tasks.jar.get().outputs.files.singleFile)
