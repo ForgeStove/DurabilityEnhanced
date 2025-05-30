@@ -3,27 +3,16 @@
 plugins {
 	idea
 	id("net.neoforged.moddev") version "+"
-	id("me.modmuss50.mod-publish-plugin") version "0.8.4"
+	id("me.modmuss50.mod-publish-plugin") version "+"
 }
-fun e(key: String) = extra[key].toString()
 repositories {
 	mavenLocal()
 	mavenCentral()
-//	maven("https://maven.createmod.net") // Create, Ponder, Flywheel
-//	maven("https://mvn.devos.one/snapshots") // Registrate
 	maven("https://maven.shedaniel.me") // Cloth Config API
 	maven("https://maven.blamejared.com") // JEI
 }
 dependencies {
-	compileOnly(fileTree(mapOf("dir" to "cache", "include" to listOf("*.jar"))))
-//	implementation("com.simibubi.create:create-${e("minecraft_version")}:${e("create_version")}:slim") { isTransitive = false }
-//	implementation("net.createmod.ponder:Ponder-${e("upper_loader")}-${e("minecraft_version")}:${e("ponder_version")}") {
-//		isTransitive = false
-//	}
-//	implementation("dev.engine-room.flywheel:flywheel-${e("loader")}-${e("minecraft_version")}:${e("flywheel_version")}")
-//	implementation("com.tterrag.registrate:Registrate:${e("registrate_version")}")
 	implementation("me.shedaniel.cloth:cloth-config-${e("loader")}:${e("cloth_config_version")}")
-	implementation("mezz.jei:jei-${e("minecraft_version")}-${e("loader")}:${e("jei_version")}")
 }
 tasks.processResources {
 	val replace = properties.mapValues { it.value.toString() }
@@ -62,3 +51,18 @@ neoForge {
 	}
 	mods { create(e("mod_id")) { sourceSet(sourceSets["main"]) } }
 }
+publishMods {
+	file.set(tasks.jar.get().outputs.files.singleFile)
+	changelog.set(file("CHANGELOG.md").readText())
+	type.set(ALPHA)
+	version.set(project.version.toString())
+	displayName.set("[${e("upper_loader")}] ${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
+	modLoaders.addAll(e("upper_loader"))
+	modrinth {
+		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
+		projectId.set("qSWV0tOk")
+		minecraftVersions.add(e("minecraft_version"))
+		requires("cloth-config")
+	}
+}
+fun e(key: String) = extra[key].toString()
