@@ -51,8 +51,6 @@ legacyForge {
 repositories {
 	mavenLocal()
 	mavenCentral()
-	maven("https://maven.shedaniel.me") // Cloth Config API
-	maven("https://maven.blamejared.com") // JEI
 }
 dependencies {
 	annotationProcessor("org.spongepowered:mixin:${e("mixin_version")}:processor")
