@@ -2,6 +2,7 @@
 	"required": false,
 	"minVersion": "0",
 	"package": "com.forgestove.durability_enhanced.mixin",
+	"refmap": "durability_enhanced.refmap.json",
 	"mixins": [
 		"AnvilMenuMixin"
 	]

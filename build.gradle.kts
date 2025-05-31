@@ -7,7 +7,7 @@ plugins {
 }
 base.archivesName.set(e("mod_id"))
 group = e("mod_group_id")
-version = "${e("minecraft_version")}-${e("mod_version")}+${e("upper_loader")}"
+version = e("mod_version")
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 idea.module {
 	isDownloadSources = true
@@ -18,12 +18,16 @@ tasks.processResources {
 	inputs.properties(replace)
 	from("src/main/resources") {
 		include("**/*.toml")
+		include("**/*.json")
 		expand(replace)
 	}
 	into("build/resources/main")
 	duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
-tasks.jar { from("LICENSE") }
+tasks.jar {
+	from("LICENSE")
+	manifest { attributes(mapOf("MixinConfigs" to "${e("mod_id")}.mixins.json")) }
+}
 mixin {
 	add(sourceSets.main.get(), "${e("mod_id")}.refmap.json")
 	config("${e("mod_id")}.mixins.json")
@@ -52,17 +56,16 @@ repositories {
 }
 dependencies {
 	annotationProcessor("org.spongepowered:mixin:${e("mixin_version")}:processor")
-	compileOnly("io.github.llamalad7:mixinextras-common:${e("mixin_extras_version")}")
-	implementation("io.github.llamalad7:mixinextras-${e("loader")}:${e("mixin_extras_version")}")
-	implementation("me.shedaniel.cloth:cloth-config-${e("loader")}:${e("cloth_config_version")}")
+	compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:${e("mixin_extras_version")}")!!)
+	implementation(jarJar("io.github.llamalad7:mixinextras-${e("loader")}:${e("mixin_extras_version")}")!!)
 }
 publishMods {
-	file.set(tasks.jar.get().outputs.files.singleFile)
+	file.set(tasks.named("reobfJar").get().outputs.files.singleFile)
 	changelog.set(file("CHANGELOG.md").readText())
 	type.set(ALPHA)
 	version.set(project.version.toString())
-	displayName.set("[${e("upper_loader")}] ${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
-	modLoaders.addAll(e("upper_loader"), e("other_loader"))
+	displayName.set("${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
+	modLoaders.addAll("Forge", "NeoForge", "Fabric", "Quilt")
 	modrinth {
 		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 		projectId.set("qSWV0tOk")
