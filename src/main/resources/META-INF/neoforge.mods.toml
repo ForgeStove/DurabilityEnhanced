@@ -1,4 +1,4 @@
-modLoader = "javafml"
+modLoader = "lowcodefml"
 loaderVersion = "0"
 issueTrackerURL = "${mod_issue_url}"
 license = "${mod_license}"
@@ -24,12 +24,6 @@ side = "SERVER"
 
 [[dependencies."${mod_id}"]]
 modId = "minecraft"
-type = "required"
-ordering = "NONE"
-side = "SERVER"
-
-[[dependencies."${mod_id}"]]
-modId = "cloth_config"
 type = "required"
 ordering = "NONE"
 side = "SERVER"

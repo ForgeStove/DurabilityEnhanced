@@ -43,11 +43,6 @@ neoForge {
 repositories {
 	mavenLocal()
 	mavenCentral()
-	maven("https://maven.shedaniel.me") // Cloth Config API
-	maven("https://maven.blamejared.com") // JEI
-}
-dependencies {
-	implementation("me.shedaniel.cloth:cloth-config-${e("loader")}:${e("cloth_config_version")}")
 }
 publishMods {
 	file.set(tasks.jar.get().outputs.files.singleFile)
@@ -60,7 +55,6 @@ publishMods {
 		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 		projectId.set("qSWV0tOk")
 		minecraftVersions.add(e("minecraft_version"))
-		requires("cloth-config")
 	}
 }
 fun e(key: String) = extra[key].toString()
