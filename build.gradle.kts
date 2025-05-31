@@ -7,7 +7,7 @@ plugins {
 }
 base.archivesName.set(e("mod_id"))
 group = e("mod_group_id")
-version = e("mod_version")
+version = "${e("minecraft_version")}-${e("mod_version")}+${e("upper_loader")}"
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 idea.module {
 	isDownloadSources = true
@@ -63,12 +63,11 @@ publishMods {
 	type.set(ALPHA)
 	version.set(project.version.toString())
 	displayName.set("${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
-	modLoaders.addAll("Forge", "NeoForge", "Fabric", "Quilt")
+	modLoaders.addAll("Forge", "NeoForge")
 	modrinth {
 		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
 		projectId.set("qSWV0tOk")
 		minecraftVersions.add(e("minecraft_version"))
-		requires("cloth-config")
 	}
 }
 fun e(key: String) = extra[key].toString()
