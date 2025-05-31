@@ -62,7 +62,7 @@ publishMods {
 	changelog.set(file("CHANGELOG.md").readText())
 	type.set(ALPHA)
 	version.set(project.version.toString())
-	displayName.set("${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
+	displayName.set("[${e("upper_loader")}] ${e("mod_name")} ${e("mod_version")}+${e("minecraft_version")}")
 	modLoaders.addAll("Forge", "NeoForge")
 	modrinth {
 		accessToken.set(providers.environmentVariable("MODRINTH_TOKEN"))
